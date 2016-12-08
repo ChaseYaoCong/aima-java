@@ -21,8 +21,8 @@ public class SearchAgent extends AbstractAgent {
 
 	private Metrics searchMetrics;
 
-	public SearchAgent(Problem p, Search search) throws Exception {
-		actionList = search.search(p);
+	public SearchAgent(Problem p, SearchForActions search) throws Exception {
+		actionList = search.findActions(p);
 		actionIterator = actionList.iterator();
 		searchMetrics = search.getMetrics();
 	}

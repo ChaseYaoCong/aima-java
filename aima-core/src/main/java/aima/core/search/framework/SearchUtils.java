@@ -6,6 +6,7 @@ import java.util.List;
 
 import aima.core.agent.Action;
 import aima.core.agent.impl.NoOpAction;
+import aima.core.search.framework.evalfunc.HeuristicFunction;
 import aima.core.search.framework.problem.GoalTest;
 import aima.core.search.framework.problem.Problem;
 
@@ -64,5 +65,15 @@ public class SearchUtils {
 			}
 		}
 		return isGoal;
+	}
+	
+	/** Returns the most optimistic heuristic function possible (always returns 0). */
+	public static HeuristicFunction getZeroHeuristic() {
+		return new HeuristicFunction() {
+			@Override
+			public double h(Object state) {
+				return 0.0;
+			}
+		};
 	}
 }

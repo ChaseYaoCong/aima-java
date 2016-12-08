@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Set;
 
 import aima.core.agent.Action;
-import aima.core.search.framework.EvaluationFunction;
 import aima.core.search.framework.Metrics;
 import aima.core.search.framework.Node;
 import aima.core.search.framework.NodeExpander;
 import aima.core.search.framework.SearchUtils;
+import aima.core.search.framework.evalfunc.EvaluationFunction;
 import aima.core.search.framework.SearchForActions;
 import aima.core.search.framework.problem.Problem;
 
@@ -86,7 +86,7 @@ public class RecursiveBestFirstSearch implements SearchForActions {
 	// function RECURSIVE-BEST-FIRST-SEARCH(problem) returns a solution, or
 	// failure
 	@Override
-	public List<Action> search(Problem p) {
+	public List<Action> findActions(Problem p) {
 		List<Action> actions = new ArrayList<Action>();
 		explored.clear();
 
@@ -106,6 +106,10 @@ public class RecursiveBestFirstSearch implements SearchForActions {
 		return actions;
 	}
 
+	public EvaluationFunction getEvaluationFunction() {
+		return evaluationFunction;
+	}
+	
 	@Override
 	public NodeExpander getNodeExpander() {
 		return nodeExpander;

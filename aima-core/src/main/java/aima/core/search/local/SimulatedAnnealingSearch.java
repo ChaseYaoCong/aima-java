@@ -1,16 +1,16 @@
 package aima.core.search.local;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import aima.core.agent.Action;
-import aima.core.search.framework.HeuristicFunction;
 import aima.core.search.framework.Metrics;
 import aima.core.search.framework.Node;
 import aima.core.search.framework.NodeExpander;
 import aima.core.search.framework.SearchForActions;
+import aima.core.search.framework.SearchForStates;
 import aima.core.search.framework.SearchUtils;
+import aima.core.search.framework.evalfunc.HeuristicFunction;
 import aima.core.search.framework.problem.Problem;
 import aima.core.util.CancelableThread;
 import aima.core.util.Util;
@@ -43,7 +43,7 @@ import aima.core.util.Util;
  * @author Mike Stampone
  * @author Ruediger Lunde
  */
-public class SimulatedAnnealingSearch implements SearchForActions {
+public class SimulatedAnnealingSearch implements SearchForActions, SearchForStates {
 
 	public enum SearchOutcome {
 		FAILURE, SOLUTION_FOUND
@@ -90,17 +90,29 @@ public class SimulatedAnnealingSearch implements SearchForActions {
 		this.scheduler = scheduler;
 		this.nodeExpander = nodeExpander;
 	}
+	
+	@Override
+	public List<Action> findActions(Problem p) {
+		nodeExpander.useParentLinks(true);
+		Node node = findNode(p);
+		return node == null ? SearchUtils.failure() : SearchUtils.getSequenceOfActions(node);
+	}
+	
+	@Override
+	public Object findState(Problem p) {
+		nodeExpander.useParentLinks(false);
+		Node node = findNode(p);
+		return node == null ? null : node.getState();
+	}
 
 	// function SIMULATED-ANNEALING(problem, schedule) returns a solution state
-	@Override
-	public List<Action> search(Problem p) {
+	public Node findNode(Problem p) {
 		clearInstrumentation();
 		outcome = SearchOutcome.FAILURE;
 		lastState = null;
 		// current <- MAKE-NODE(problem.INITIAL-STATE)
 		Node current = nodeExpander.createRootNode(p.getInitialState());
 		Node next = null;
-		List<Action> result = new ArrayList<Action>();
 		// for t = 1 to INFINITY do
 		int timeStep = 0;
 		while (!CancelableThread.currIsCanceled()) {
@@ -112,8 +124,7 @@ public class SimulatedAnnealingSearch implements SearchForActions {
 			if (temperature == 0.0) {
 				if (SearchUtils.isGoalState(p, current))
 					outcome = SearchOutcome.SOLUTION_FOUND;
-				result = SearchUtils.getSequenceOfActions(current);
-				break;
+				return current;
 			}
 
 			updateMetrics(temperature, getValue(current));
@@ -129,7 +140,7 @@ public class SimulatedAnnealingSearch implements SearchForActions {
 				}
 			}
 		}
-		return result;
+		return null;
 	}
 
 	/**

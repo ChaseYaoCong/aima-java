@@ -66,6 +66,10 @@ public class SimulationPaneCtrl {
 		setState(State.READY);
 	}
 
+	public Optional<Parameter> getParam(String paramName) {
+		return Parameter.find(params, paramName);
+	}
+	
 	public int getParamValueIndex(String paramName) {
 		int valIdx = -1;
 		int paramIdx = Parameter.indexOf(params, paramName);
@@ -92,6 +96,12 @@ public class SimulationPaneCtrl {
 	public boolean isParamVisible(String paramName) {
 		int paramIdx = Parameter.indexOf(params, paramName);
 		return paramCombos.get(paramIdx).isVisible();
+	}
+
+	/** Call this only for parameters which do not depend on other parameters! */
+	public void setParamDisable(String paramName, boolean value) {
+		int paramIdx = Parameter.indexOf(params, paramName);
+		paramCombos.get(paramIdx).setDisable(value);
 	}
 
 	public void setParam(String paramName, int valueIdx) {
@@ -211,7 +221,10 @@ public class SimulationPaneCtrl {
 			setState(State.RUNNING);
 			simMethod.run();
 		} catch (Exception e) {
-			setStatus("Sorry, something went wrong during simulation.");
+			setStatus("Sorry, something went wrong during simulation: " + e.getClass().getSimpleName());
+			e.printStackTrace();
+		} catch (Error e) {
+			setStatus("Sorry, something went totally wrong during simulation: " + e.getClass().getSimpleName());
 			e.printStackTrace();
 		}
 		setState(State.FINISHED);

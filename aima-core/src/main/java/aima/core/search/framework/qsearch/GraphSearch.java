@@ -1,11 +1,9 @@
 package aima.core.search.framework.qsearch;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import aima.core.agent.Action;
 import aima.core.search.framework.Node;
 import aima.core.search.framework.NodeExpander;
 import aima.core.search.framework.problem.Problem;
@@ -30,7 +28,7 @@ import aima.core.search.framework.problem.Problem;
  * Figure 3.7 An informal description of the general graph-search algorithm.
  * <br>
  * This implementation is based on the template method
- * {@link QueueSearch#search(Problem, Queue)} of the superclass and provides
+ * {@link QueueSearch#findNode(Problem, Queue)} of the superclass and provides
  * implementations for the needed primitive operations. In contrast to the code
  * above, here, nodes resulting from node expansion are added to the frontier
  * even if nodes for the same states already exist there. This makes it possible
@@ -58,10 +56,10 @@ public class GraphSearch extends QueueSearch {
 	 * {@link QueueSearch}.
 	 */
 	@Override
-	public List<Action> search(Problem problem, Queue<Node> frontier) {
+	public Node findNode(Problem problem, Queue<Node> frontier) {
 		// initialize the explored set to be empty
 		explored.clear();
-		return super.search(problem, frontier);
+		return super.findNode(problem, frontier);
 	}
 
 	/**

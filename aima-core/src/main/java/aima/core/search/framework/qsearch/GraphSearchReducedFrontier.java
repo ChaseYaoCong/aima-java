@@ -3,13 +3,11 @@ package aima.core.search.framework.qsearch;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
-import aima.core.agent.Action;
 import aima.core.search.framework.Node;
 import aima.core.search.framework.NodeExpander;
 import aima.core.search.framework.problem.Problem;
@@ -35,7 +33,7 @@ import aima.core.search.framework.problem.Problem;
  * 
  * <br>
  * This implementation is based on the template method
- * {@link QueueSearch#search(Problem, Queue)} of the superclass and provides
+ * {@link QueueSearch#findNode(Problem, Queue)} of the superclass and provides
  * implementations for the needed primitive operations. It implements a special
  * version of graph search which keeps the frontier short by focusing on the
  * best node for each state only. It should only be used in combination with
@@ -67,13 +65,13 @@ public class GraphSearchReducedFrontier extends QueueSearch {
 	 * state map and calls the inherited version of search.
 	 */
 	@Override
-	public List<Action> search(Problem problem, Queue<Node> frontier) {
+	public Node findNode(Problem problem, Queue<Node> frontier) {
 		// initialize the explored set to be empty
 		if (frontier instanceof PriorityQueue<?>)
 			nodeComparator = ((PriorityQueue<Node>) frontier).comparator();
 		explored.clear();
 		frontierNodeLookup.clear();
-		return super.search(problem, frontier);
+		return super.findNode(problem, frontier);
 	}
 
 	public Comparator<? super Node> getNodeComparator() {
@@ -83,9 +81,9 @@ public class GraphSearchReducedFrontier extends QueueSearch {
 	/**
 	 * Inserts the node into the frontier if the node's state is not yet
 	 * explored and not present in the frontier. If a second node for the same
-	 * state is already part of the frontier, it is checked, which node is better
-	 * (with respect to priority). Depending of the result, the existing node is
-	 * replaced or the new node is dropped.
+	 * state is already part of the frontier, it is checked, which node is
+	 * better (with respect to priority). Depending of the result, the existing
+	 * node is replaced or the new node is dropped.
 	 */
 	@Override
 	protected void addToFrontier(Node node) {

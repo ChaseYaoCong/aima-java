@@ -1,7 +1,6 @@
 package aima.gui.fx.framework;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,12 +27,13 @@ public class SimulationPaneBuilder {
 
 	protected List<Parameter> parameters = new ArrayList<Parameter>();
 	protected Optional<Node> stateView = Optional.empty();
+	/** Should return true if initialization was successful. */
 	protected Optional<Runnable> initMethod = Optional.empty();
 	protected Optional<Runnable> simMethod = Optional.empty();
 
-	public final void defineParameters(Parameter... params) {
+	public final void defineParameters(List<Parameter> params) {
 		parameters.clear();
-		parameters.addAll(Arrays.asList(params));
+		parameters.addAll(params);
 	}
 
 	public final void defineStateView(Node stateView) {

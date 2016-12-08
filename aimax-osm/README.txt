@@ -3,21 +3,35 @@
 by Ruediger Lunde (Ruediger.Lunde@gmail.com)
 
 This project provides a framework for building intelligent Open Street Map
-(OSM) data applications. It was originally designed to validate and test agent
-and search concepts from the AIMA library in an interesting, non-trivial
-application area. Meanwhile, it provides a framework for building small
-navigation systems.
+(OSM) data applications. It was designed to validate and test agent
+and search concepts from the AIMA library in a non-trivial
+application area and provide an interesting coding environment for student
+projects. Typical programming challenges include:
+# Extend the `OsmRoutePlannerApp` and provide additional options, e.g. to optimize
+time for a driver, to optimize fun for a cyclist, ...
+# Extend the `OsmLRTAStarAgentApp` and add variants of the original LRTAStar-based
+agent which try to perform better than the original in this special environment, e.g.
+by increasing greediness.
+# Extend the `OsmAgentBaseApp` and add a new agent which is able to react on unforeseen
+events, e.g. on a road blocking defined by additional markers.
+# Develop an agent which plans the Saturday morning shopping tour for you. Try to
+create an optimal tour (the typical greedy TSP implementation is not that challenging...).
 
-The framework provides interfaces for central parts of the system and additionally
-example implementations. In the current version, the fundamental data structures
+Two GUIs are provided: One is based on JavaFX (package `aimax.osm.gui.fx`) and the other based on
+Swing (package `aimax.osm.gui.swing`). The FX GUI ist newer, more elegant, and
+more focused on AIMA concepts evaluation. The Swing GUI provides more functionality including
+a toolbox for building small navigation systems.
+
+The framework provides interfaces for central parts of a map visualization system and
+additionally example implementations. Fundamental data structures
 for nodes, ways, and the map itself can be replaced. The framework supports experiments
 with different implementations to optimize routing and also to integrate a database
-version of the map representation. The application <code>aimax.osm.applications.MiniNaviApp</code>
+version of the map representation. The application `aimax.osm.gui.swing.applications.MiniNaviApp`
 demonstrates how to plug the components together and provides means to integrate and test
 own versions of the needed components.
 
 Central part of the project is an OSM viewer implementation. It is designed
-as an efficient general purpose viewer which is highly configurable and extendible.
+as an efficient general purpose viewer which is highly configurable and extendable.
 
 The internal default map representation is chosen as close as possible to the
 original OSM XML file format. A kd-tree is used to improve rendering efficiency.
@@ -25,15 +39,15 @@ Classification and abstraction of map entities as well as their
 visual appearance within the drawn map are controlled by declarative
 rendering rules. They can be replaced or configured at runtime.
 New personal map styles can be created quite easily. See classes
-<code>aimax.osm.viewer.MapStyleFactory</code> and
-<code>aimax.osm.application.OsmViewerPlusApp</code> for ideas how that
+`aimax.osm.viewer.MapStyleFactory` and
+`aimax.osm.gui.swing.applications.OsmViewerPlusApp` for ideas how that
 can be achieved.
 
 Routing functionality is based on the AIMA-CORE library.
-All dependencies to the AIMA libraries are encapsulated in the routing
-sub-package and the applications using functionality from that package.
-So the viewer classes can also be used as stand-alone library
-for building general OSM applications.
+All dependencies from the AIMA libraries are encapsulated in the routing
+sub-package (search algorithms) and the gui sub-package (JavaFX/Swing-based frameworks).
+So all other packages can also be used as stand-alone library for building general OSM
+applications.
 
 In the current version, relation entities are still ignored and the size
 of the map when using the default representation should be limited to about 
@@ -42,11 +56,12 @@ cities like Berlin can be loaded and displayed without any problem if enough
 heap space is provided (VM argument -Xmx500M).
 
 Getting started: Run one of the applications in the
-<code>aimax.osm.applications</code> package. If no map is displayed
-by default, make sure that the main/resource folder is included 
+`aimax.osm.gui.fx.applications` or `aimax.osm.gui.swing.applications` package,
+or use the corresponding integrated applications one package level up. If no map is
+displayed by default, make sure that the main/resource folder is included
 in the build path of your project, recompile and start again.
-Then, place the mouse inside the map viewer pane. Try mouse-left, mouse-right,
-mouse-drag, ctrl-mouse-left, plus button, minus button, shift-plus, shift-minus,
+Then, place the mouse inside the map viewer pane. Try mouse-left, mouse-middle,
+mouse-right, mouse-drag, ctrl-mouse-left, plus button, minus button, shift-plus, shift-minus,
 alt-plus, alt-minus, space, ctrl-space, arrow buttons, and also the mouse-wheel
 for navigation, mark setting, and track definition. For routing, at least two
 markers must be set.
@@ -84,17 +99,13 @@ for details.
 
 == OSM Maps ==
 
-Example maps can be downloaded from the AIMA project website, example-osm-maps.zip :
-
-http://code.google.com/p/aima-java/downloads/list
-
-All provided example maps have been created based on data published at:
+The provided example map has been created based on data published at:
 http://download.geofabrik.de/osm/
 
 Smaller maps from servers like geofabrik or cloudmade can be loaded into the viewer
 directly, especially, if enough heap space is provided (e.g. VM argument -Xmx1500M).
-Additionally, parts of larger maps can be loaded into the viewer applications by
-holding <ctrl> while pressing the load map button and specifying a bounding box.
+Additionally (Swing GUI only!), parts of larger maps can be loaded into the viewer applications
+by holding <ctrl> while pressing the load map button and specifying a bounding box.
 If two markers are set in the currently visible map, their values are used to define
 the bounding box for the next map to load. The coordinates can also be specified in
 text form. The easiest way to obtain the needed latitude and longitude bounds is to
@@ -128,17 +139,17 @@ Under the release/ directory you should find three jar files, aima-core.jar, aim
 Ensure these are on your CLASSPATH, the different GUI programs that can be run using these are:
  * java -jar aimax-osm.jar
    + this will run the default OsmAimaDemoApp, this allows you to run applications and demos from the aima-gui project as well as some of the applications provided in this project.
- * java -classpath aimax-osm.jar aimax.osm.applications.OsmViewerApp
+ * java -classpath aimax-osm.jar aimax.osm.gui.swing.applications.OsmViewerApp
    + just the plain viewer (not dependent on AIMA)
- * java -classpath aimax-osm.jar aimax.osm.applications.OsmViewerPlusApp
+ * java -classpath aimax-osm.jar aimax.osm.gui.swing.applications.OsmViewerPlusApp
    + demonstrates, how to configure and extend the viewer
- * java -classpath aimax-osm.jar aimax.osm.applications.RoutePlannerApp
+ * java -classpath aimax-osm.jar aimax.osm.gui.swing.applications.RoutePlannerApp
    + uses aima-core search functionality for routing in OSM maps
- * java -classpath aimax-osm.jar aimax.osm.applications.OsmAgentApp
+ * java -classpath aimax-osm.jar aimax.osm.gui.swing.applications.OsmAgentApp
    + lets map agents from aima-core act in map environments which are defined by OSM data 
- * java -classpath aimax-osm.jar aimax.osm.applications.SearchDemoOsmAgentApp
+ * java -classpath aimax-osm.jar aimax.osm.gui.swing.applications.SearchDemoOsmAgentApp
    + visualizes simulated search space exploration of different search strategies
- * java -classpath aimax-osm.jar aimax.osm.applications.MiniNaviApp
+ * java -classpath aimax-osm.jar aimax.osm.gui.swing.applications.MiniNaviApp
    + provides a base for car navigation system development
 
 It is recommended to start the applications with VM argument -Xmx500m (or higher value) and
